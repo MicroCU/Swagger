@@ -1,0 +1,58 @@
+openapi: 3.0.0
+servers:
+  - description: API for CU Neuron Capstone Project
+    url: mockURL
+info:
+  description: This is the API for CU Neuron Capstone Project
+  version: "1.0.0"
+  title: CU Neuron Capstone Project
+  contact:
+    email: tikhamporntan@gmail.com
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+tags:
+  - name: interviews
+    description: Questions api for exploring user needs in the first time user use the website. All questions will be stored in frontend side and will be sent the category result (top 3) to backend side.
+paths:
+  /categories:
+    post:
+      tags:
+        - interviews
+      summary: Submit user's top 3 categories
+      description: Submit user's top 3 categories
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                categoryId:
+                  type: array
+                  description: array of top 3 categories' id
+                  items:
+                    type: string
+                    description: id of category
+                  example: ["c1", "c2", "c3"]
+                type:
+                  type: string
+                  description: type of interview question
+                  enum:
+                    - "no-passion"
+                    - "passion"
+              required:
+                - data
+      responses:
+        201:
+          description: User's categories submitted successfully.
+          content:
+            application/json:
+              example:
+                message: User's categories submitted successfully.
+        400:
+          description: Bad request. Please check the request payload.
+          content:
+            application/json:
+              example:
+                message: Bad request. Please check the request payload.

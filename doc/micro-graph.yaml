@@ -1,0 +1,176 @@
+openapi: 3.0.0
+servers:
+  - description: API for CU Neuron Capstone Project
+    url: mockURL
+info:
+  description: This is the API for CU Neuron Capstone Project
+  version: "1.0.0"
+  title: CU Neuron Capstone Project
+  contact:
+    email: tikhamporntan@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: micro-graph
+    description: API for getting graph (Each node is microlearning content) for specific path
+paths:
+  /paths/:id:
+    get:
+      tags:
+        - micro-graph
+      summary: Get graph
+      description: Get directed graph (Each node is microlearning content) for specific path
+      parameters:
+        - name: id
+          in: path
+          description: id of path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get graph successfully.
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  groups:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Group'
+                    description: list of group in the path
+                example:
+                  groups:
+                    - id: "g1"
+                      name: "Group 1"
+                      nexts: ["g2"]
+                      type: "ordered"
+                      micros:
+                        - id: "n1"
+                          name: "Node 1"
+                          progress: 0
+                          type: "video"
+                        - id: "n2"
+                          name: "Node 2"
+                          progress: 50
+                          type: "video"
+                    - id: "g2"
+                      name: "Group 2"
+                      nexts: ["g3"]
+                      type: "unordered"
+                      micros:
+                        - id: "n3"
+                          name: "Node 3"
+                          progress: 100
+                          type: "practice"
+                        - id: "n4"
+                          name: "Node 4"
+                          progress: 20
+                          type: "video"
+                    - id: "g3"
+                      name: "Node 5"
+                      nexts: []
+                      type: "ordered"
+                      micros:
+                        - id: "g3"
+                          name: "Node 5"
+                          progress: 100
+                          type: "test"
+                 
+        '400':
+          description: Bad request. Please check the request payload.
+          content:
+            application/json:
+              example:
+                message: Bad request. Please check the request payload.
+  /micros/progress/:id:
+    patch:
+      tags:
+        - micro-graph
+      summary: Update micro progress
+      description: Update micro progress
+      parameters:
+        - name: id
+          in: path
+          description: id of micro
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Micro progress
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                progress:
+                  type: integer
+                  minimum: 0
+                  maximum: 100
+              example:
+                progress: 50
+      responses:
+        '200':
+          description: Update micro progress successfully.
+          content:
+            application/json:
+              example:
+                message: Update micro progress successfully.
+        '400':
+          description: Bad request. Please check the request payload.
+          content:
+            application/json:
+              example:
+                message: Bad request. Please check the request payload.
+components:
+  schemas:
+    Micro:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "n1"
+        name:
+          type: string
+          example: "Node 1"
+        progress:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: If the micro's type is not video, progress can be only 0 or 100.
+        type:
+          type: string
+          enum:
+            - 'video'
+            - 'test'
+            - 'practice'
+    Group: 
+      type: object
+      properties:
+        id:
+          type: string
+          example: "g1"
+        name:
+          type: string
+          example: "Group 1"
+        nexts:
+          type: array
+          items:
+            type: string
+          description: List of next micro id
+        type: 
+          type: string
+          enum:
+            - 'ordered'
+            - 'unordered'
+          description: | 
+            Type of group.
+            - ordered: group with micros that must be completed in order (order is defined by index of the array)
+            - unordered: group with micros that can be completed in any order
+        micros:
+          type: array
+          items:
+            $ref: '#/components/schemas/Micro'

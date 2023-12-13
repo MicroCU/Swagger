@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger_ui_container
+    ports:
+      - "80:8080"
+    volumes:
+      - ./doc:/usr/share/nginx/html/doc
+    environment:
+      URLS_PRIMARY_NAME: "Interview Page"
+      URLS: "[{ url: 'doc/interview.yaml', name: 'Interview Page' },
+          { url: 'doc/landing.yaml', name: 'Landing Page' },
+          { url: 'doc/micro-graph.yaml', name: 'Microlearning Page' },
+          { url: 'doc/video.yaml', name: 'Video Content Page' },
+         ]"

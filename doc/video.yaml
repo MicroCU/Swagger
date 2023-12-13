@@ -1,0 +1,191 @@
+openapi: 3.0.0
+servers:
+  - description: API for CU Neuron Capstone Project
+    url: mockURL
+info:
+  description: This is the API for CU Neuron Capstone Project
+  version: "1.0.0"
+  title: CU Neuron Capstone Project
+  contact:
+    email: tikhamporntan@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: video
+    description: API for getting video for specific microlearning node
+paths:
+  /micros/:id:
+    get:
+      tags:
+        - video
+      summary: Get video for specific microlearning node
+      description: Get video for specific microlearning node
+      parameters:
+        - name: id
+          in: path
+          description: id of microlearning node
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get video successfully.
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  video:
+                    $ref: '#/components/schemas/Video'
+                  documents:
+                    type: "array"
+                    items:
+                      $ref: '#/components/schemas/Document'
+                    description: document of video (e.g file that teacher upload or use in video)
+          '400':
+            description: Bad request. Please check the request payload.
+            content:
+              application/json:
+                example:
+                  message: Bad request. Please check the request payload.
+  /micros/:id/next:
+    get:
+      tags:
+        - video
+      summary: Get next video
+      description: | 
+        Get next video for specific microlearning node when current video is end. 
+        The next video is the video that have the "same level" as the current video. 
+        If the current video is the last video in the level, the next video will be the first video in the next level.
+      parameters:
+        - name: id
+          in: path
+          description: id of microlearning node
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get next video successfully.
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  nexts:
+                    type: "array"
+                    items:
+                      $ref: '#/components/schemas/VideoNext'
+                example:
+                  nexts:
+                    - micro:
+                        id: "m1"
+                        title: "How to make a cup of coffee"
+                      title: "It's okay, go ahead."
+                    - micro:
+                        id: "m2"
+                        title: "How to make a ADVANCE cup of tea"
+                      title: "Give me advance example"
+
+        '400':
+          description: Bad request. Please check the request payload.
+          content:
+            application/json:
+              example:
+                message: Bad request. Please check the request payload.
+  /paths/:id/videos:
+    get:
+      tags:
+        - video
+      summary: Get all videos in path
+      description: Get all videos in path
+      parameters:
+        - name: id
+          in: path
+          description: id of path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get all videos in path successfully.
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  total:
+                    type: "integer"
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VideoBeief'
+        '400':
+          description: Bad request. Please check the request payload.
+          content:
+            application/json:
+              example:
+                message: Bad request. Please check the request payload.
+components:
+  schemas:
+    VideoBeief:
+      type: object
+      properties:
+        microId:
+          type: "string"
+          example: "m1"
+          description: id of microlearning node
+        title:
+          type: "string"
+          example: "How to make a cup of coffee"
+          description: title of video
+        groupName:
+          type: "string"
+          example: "Group 1"
+          description: name of group that video belong to
+    VideoNext:
+      type: object
+      properties:
+        micro:
+          type: object
+          properties:
+            id:
+              type: "string"
+              example: "m1"
+              description: id of microlearning node
+            title:
+              type: "string"
+              example: "How to make a cup of coffee"
+              description: title of video
+        title:
+          type: "string"
+          example: "It's okay, go ahead."
+          description: option's title of video. It will be displayed when user need to choose which video to play next.
+    Video:
+      type: object
+      properties:
+        microId:
+          type: "string"
+          example: "m1"
+          description: id of microlearning node
+        title:
+          type: "string"
+          example: "How to make a cup of coffee"
+          description: title of video
+        link:
+          type: "string"
+          example: "https://www.youtube.com/watch?v=1q6zleFf6pE" 
+          description: resource of video 
+    Document:
+      type: object
+      properties:
+        name:
+          type: "string"
+          example: "manual.pdf"
+          description: name of document
+        link:
+          type: "string"
+          example: "https://mycourseville-default.s3.ap-southeast-1.amazonaws.com/useruploaded_course_files/2023_1/39312/materials/W01_WebDevFundamentals-957520-16913396401537.pdf"
+          description: link of document
+        

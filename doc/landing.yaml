@@ -1,0 +1,248 @@
+openapi: 3.0.0
+servers:
+  - description: API for CU Neuron Capstone Project
+    url: mockURL
+info:
+  description: This is the API for CU Neuron Capstone Project
+  version: "1.0.0"
+  title: CU Neuron Capstone Project
+  contact:
+    email: tikhamporntan@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: landing
+    description: This api is for landing page. This page contains suggestions and search bar. It has two modes (undirected graph which shows associated paths and normal mode).
+paths:
+  /suggestions:
+    get:
+      tags:
+        - landing
+      summary: Get suggestions
+      description: API for getting suggestions for user
+      responses:
+        200:
+          description: Get suggestions successfully.
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  total:
+                    type: "integer"
+                  journeys:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Journey'
+                  relationships:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Relationship'
+                example:
+                  total: 2
+                  journeys:
+                    - id: "j1"
+                      name: "English For Business"
+                      paths:
+                        total: 2
+                        data:
+                          - id: "p1"
+                            name: "Grammar"
+                            description: "Sentence Structure, Syntax and Punctuation"
+                            picture: "https://www.flaticon.com/svg/static/icons/svg/2922/1112223.svg"
+                            categories: 
+                              - id: "c1"
+                                name: "Daily Conversation"
+                                icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922510.svg"
+                              - id: "c2"
+                                name: "Business"
+                                icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922511.svg"
+                            status: "Still learning"
+                          - id: "p2"
+                            name: "Vocabulary"
+                            description: "Word and Phrases"
+                            picture: "https://www.flaticon.com/svg/static/icons/svg/2922/2922511.svg"
+                            categories: 
+                              - id: "c1"
+                                name: "Daily Conversation"
+                                icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922512.svg"
+                              - id: "c2"
+                                name: "Business"
+                                icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922513.svg"
+                            status: "Passed Test"
+                    - id: "j2"
+                      name: "Communication Tips"
+                      paths:
+                        total: 1
+                        data:
+                          - id: "p5"
+                            name: "Understanding Partner"
+                            description: "How to understand your partner"
+                            picture: "https://www.flaticon.com/svg/static/icons/svg/2922/2922513.svg"
+                            categories: 
+                              - id: "c1"
+                                name: "Daily Conversation"
+                                icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922514.svg"
+                              - id: "c2"
+                                name: "Business"
+                                icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922515.svg"
+                            status: "Still learning"
+                  relationships:
+                    - id: "p1"
+                      neighbor: ['p2']
+                    - id: "p2"
+                      neighbor: ['p1']
+                    - id: "p5" 
+                      neighbor: []
+        400:
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Bad request. Please check the request payload.
+  /search:
+    get:
+      tags:
+        - landing
+      summary: Search specific path
+      description: API for searching specific path.
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: search query
+          required: true
+        - name: depth
+          in: query
+          schema:
+            type: integer
+          description: depth of search result
+          required: true
+      responses:
+        200:
+          description: Search successfully.
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  total:
+                    type: "integer"
+                    description: total number of paths from the search result
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Path'
+                  relationships:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Relationship'
+                example:
+                  total: 1
+                  data:
+                    - id: "p1"
+                      name: "Grammar"
+                      description: "Sentence Structure, Syntax and Punctuation"
+                      picture: "https://www.flaticon.com/svg/static/icons/svg/2922/1112223.svg"
+                      categories: 
+                        - id: "c1"
+                          name: "Daily Conversation"
+                          icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922510.svg"
+                        - id: "c2"
+                          name: "Business"
+                          icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922511.svg"
+                      status: "Still learning"
+                  relationships:
+                    - id: "p1"  # depth 0 (search result)
+                      neighbor: ['p2']
+                    - id: "p2"  # depth 1 
+                      neighbor: ['p1', 'p3']
+                    - id: "p3" # depth 2 
+                      neighbor: ['p2', 'p4']
+                    - id: "p4" # depth 3
+                      neighbor: ['p3'] # only show path which is in the relationships
+                    # p1 <--> p2 <--> p3 <--> p4
+        400:
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Bad request. Please check the request payload.
+components:
+  schemas:
+    Journey:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "j1"
+        name:
+          type: string
+          example: "English For Business"
+        paths:
+          type: 
+            object
+          properties:
+            total:
+              type: integer
+              example: 1
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/Path'
+    Path:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "p1"
+        name:
+          type: string
+          example: "Grammar"
+        description:
+          type: string
+          example: "Sentence Structure, Syntax and Punctuation"
+        picture:
+          type: string
+          description: path's picture (if the path has no picture, it will be empty string)
+          example: "https://www.flaticon.com/svg/static/icons/svg/2922/1112223.svg"
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+        status:
+          type: string
+          description: status of the path (Still learning, Passed Test, Not visited)
+          enum:
+            - "Still learning"
+            - "Passed Test"
+            - "Not visited"
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "c1"
+        name:
+          type: string
+          example: "Daily Conversation"
+        icon:
+          type: string
+          example: "https://www.flaticon.com/svg/static/icons/svg/2922/2922510.svg"
+    Relationship:
+      description: Relationship between paths. For the search results, it will show the relationship between the searched path and the other paths in 3 depth.
+      type: object
+      properties:
+        id:
+          type: string
+          example: "p1"
+        neighbor:
+          type: array
+          description: array of associated path's id
+          items:
+            type: string
+          example: ['p2', 'p3', 'p4']
+
+        
