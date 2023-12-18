@@ -13,17 +13,19 @@ info:
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 tags:
   - name: landing
-    description: This api is for landing page. This page contains suggestions and search bar. It has two modes (undirected graph which shows associated paths and normal mode).
+    description: This api is for landing page. This page contains journeys, recently visited and search bar. It has two modes (undirected graph which shows associated paths and normal mode).
 paths:
-  /suggestions:
+  /journeys:
     get:
       tags:
         - landing
-      summary: Get suggestions
-      description: API for getting suggestions for user
+      summary: Get journeys
+      description: API for getting journeys for user (Need to get userId from token)
+      security:
+        - bearerAuth: []
       responses:
         200:
-          description: Get suggestions successfully.
+          description: Get journeys successfully.
           content:
             application/json:
               schema:
@@ -101,12 +103,76 @@ paths:
             application/json:
               example:
                 message: Bad request. Please check the request payload.
+        401:
+          description: Unauthorized. Please login.
+          content:
+            application/json:
+              example:
+                message: Unauthorized. Please login.
+  /paths/recently:
+    get:
+      tags:
+          - landing
+      summary: Get recently visited paths
+      description: API for getting recently visited paths for user (Need to get userId from token)
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Get recently visited paths successfully.
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  total:
+                    type: "integer"
+                  paths:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Path'
+                  relationships:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Relationship'
+                example:
+                  total: 1
+                  paths:
+                    - id: "p1"
+                      name: "Grammar"
+                      description: "Sentence Structure, Syntax and Punctuation"
+                      picture: "https://www.flaticon.com/svg/static/icons/svg/2922/1112223.svg"
+                      categories: 
+                        - id: "c1"
+                          name: "Daily Conversation"
+                          icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922510.svg"
+                        - id: "c2"
+                          name: "Business"
+                          icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922511.svg"
+                      status: "Still learning"
+                  relationships:
+                    - id: "p1"
+                      neighbor: []
+        400:
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Bad request. Please check the request payload.
+        401:
+          description: Unauthorized. Please login.
+          content:
+            application/json:
+              example:
+                message: Unauthorized. Please login.
   /search:
     get:
       tags:
         - landing
       summary: Search specific path
       description: API for searching specific path.
+      security:
+        - bearerAuth: []
       parameters:
         - name: search
           in: query
@@ -170,7 +236,54 @@ paths:
             application/json:
               example:
                 message: Bad request. Please check the request payload.
+        401:
+          description: Unauthorized. Please login.
+          content:
+            application/json:
+              example:
+                message: Unauthorized. Please login.
+  /achievement:
+    get:
+      tags:
+          - landing
+      summary: Get achievement of each journey
+      description: API for getting achievement of all journeys that user is involved (Need to get userId from token)
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Get achievement of each journey successfully.
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  total:
+                    type: "integer"
+                    example: 1
+                  journeys:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/JourneyAchievement'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Bad request. Please check the request payload.
+        401:
+          description: Unauthorized. Please login.
+          content:
+            application/json:
+              example:
+                message: Unauthorized. Please login.
+security:
+  - bearerAuth: []
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
   schemas:
     Journey:
       type: object
@@ -192,6 +305,37 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/Path'
+    JourneyAchievement:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "j1"
+        name:
+          type: string
+          example: "English For Business"
+        current:
+          description: amount of paths that user has passed the test
+          type: integer
+          example: 3
+        total:
+          description: total amount of paths in the journey
+          type: integer
+          example: 5
+        remainingPaths:
+          description: array of remaining paths' id (Path which has status "Still learning" or "Not visited")
+          type: array
+          items:
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+          example: 
+            - id: "p1"
+              name: "Grammar"
+            - id: "p2"
+              name: "Vocabulary"
     Path:
       type: object
       properties:
@@ -240,9 +384,7 @@ components:
           example: "p1"
         neighbor:
           type: array
-          description: array of associated path's id
+          description: array of associated path's id (Show only path's id which exists in the relationships)
           items:
             type: string
           example: ['p2', 'p3', 'p4']
-
-        

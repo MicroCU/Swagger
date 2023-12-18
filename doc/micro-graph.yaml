@@ -20,7 +20,9 @@ paths:
       tags:
         - micro-graph
       summary: Get graph
-      description: Get directed graph (Each node is microlearning content) for specific path
+      description: Get directed graph (Each node is microlearning content) for specific path (Need to get userId from token)
+      security:
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -29,7 +31,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        200:
           description: Get graph successfully.
           content:
             application/json:
@@ -78,19 +80,26 @@ paths:
                           name: "Node 5"
                           progress: 100
                           type: "test"
-                 
-        '400':
+        400:
           description: Bad request. Please check the request payload.
           content:
             application/json:
               example:
                 message: Bad request. Please check the request payload.
+        401:
+          description: Unauthorized. Please login.
+          content:
+            application/json:
+              example:
+                message: Unauthorized. Please login.
   /micros/progress/:id:
     patch:
       tags:
         - micro-graph
       summary: Update micro progress
-      description: Update micro progress
+      description: Update micro progress (Need to get userId from token)
+      security:
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -113,19 +122,31 @@ paths:
               example:
                 progress: 50
       responses:
-        '200':
+        200:
           description: Update micro progress successfully.
           content:
             application/json:
               example:
                 message: Update micro progress successfully.
-        '400':
+        400:
           description: Bad request. Please check the request payload.
           content:
             application/json:
               example:
                 message: Bad request. Please check the request payload.
+        401:
+          description: Unauthorized. Please login.
+          content:
+            application/json:
+              example:
+                message: Unauthorized. Please login.
+security:
+  - bearerAuth: []
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
   schemas:
     Micro:
       type: object

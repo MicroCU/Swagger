@@ -21,6 +21,8 @@ paths:
         - video
       summary: Get video for specific microlearning node
       description: Get video for specific microlearning node
+      security:
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -29,7 +31,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        200:
           description: Get video successfully.
           content:
             application/json:
@@ -43,12 +45,18 @@ paths:
                     items:
                       $ref: '#/components/schemas/Document'
                     description: document of video (e.g file that teacher upload or use in video)
-          '400':
-            description: Bad request. Please check the request payload.
-            content:
-              application/json:
-                example:
-                  message: Bad request. Please check the request payload.
+        400:
+          description: Bad request. Please check the request payload.
+          content:
+            application/json:
+              example:
+                message: Bad request. Please check the request payload.
+        401:
+          description: Unauthorized. Please login.
+          content:
+            application/json:
+              example:
+                message: Unauthorized. Please login.
   /micros/:id/next:
     get:
       tags:
@@ -58,6 +66,8 @@ paths:
         Get next video for specific microlearning node when current video is end. 
         The next video is the video that have the "same level" as the current video. 
         If the current video is the last video in the level, the next video will be the first video in the next level.
+      security:
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -66,7 +76,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        200:
           description: Get next video successfully.
           content:
             application/json:
@@ -87,19 +97,26 @@ paths:
                         id: "m2"
                         title: "How to make a ADVANCE cup of tea"
                       title: "Give me advance example"
-
-        '400':
+        400:
           description: Bad request. Please check the request payload.
           content:
             application/json:
               example:
                 message: Bad request. Please check the request payload.
+        401:
+            description: Unauthorized. Please login.
+            content:
+              application/json:
+                example:
+                  message: Unauthorized. Please login.
   /paths/:id/videos:
     get:
       tags:
         - video
       summary: Get all videos in path
       description: Get all videos in path
+      security:
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -108,7 +125,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        200:
           description: Get all videos in path successfully.
           content:
             application/json:
@@ -121,13 +138,25 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/VideoBeief'
-        '400':
+        400:
           description: Bad request. Please check the request payload.
           content:
             application/json:
               example:
                 message: Bad request. Please check the request payload.
+        401:
+            description: Unauthorized. Please login.
+            content:
+              application/json:
+                example:
+                  message: Unauthorized. Please login.
+security:
+  - bearerAuth: []
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
   schemas:
     VideoBeief:
       type: object

@@ -13,14 +13,16 @@ info:
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 tags:
   - name: interviews
-    description: Questions api for exploring user needs in the first time user use the website. All questions will be stored in frontend side and will be sent the category result (top 3) to backend side.
+    description: Questions api for exploring user needs in the first time user use the website. All questions will be stored in frontend side and will be sent the journey result (top 3) to backend side.
 paths:
-  /categories:
+  /journeys:
     post:
       tags:
         - interviews
-      summary: Submit user's top 3 categories
-      description: Submit user's top 3 categories
+      summary: Submit user's top 3 journeys
+      description: Submit user's top 3 journeys. (Need to get userId from token)
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -28,31 +30,38 @@ paths:
             schema:
               type: object
               properties:
-                categoryId:
+                journeyId:
                   type: array
-                  description: array of top 3 categories' id
+                  description: array of top 3 journeys' id
                   items:
                     type: string
-                    description: id of category
-                  example: ["c1", "c2", "c3"]
-                type:
-                  type: string
-                  description: type of interview question
-                  enum:
-                    - "no-passion"
-                    - "passion"
+                    description: id of journey
+                  example: ["j1", "j2", "j3"]
               required:
                 - data
       responses:
         201:
-          description: User's categories submitted successfully.
+          description: User's journeys submitted successfully.
           content:
             application/json:
               example:
-                message: User's categories submitted successfully.
+                message: User's journeys submitted successfully.
         400:
           description: Bad request. Please check the request payload.
           content:
             application/json:
               example:
                 message: Bad request. Please check the request payload.
+        401:
+          description: Unauthorized. Please login.
+          content:
+            application/json:
+              example:
+                message: Unauthorized. Please login.
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
