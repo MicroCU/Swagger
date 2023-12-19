@@ -13,14 +13,24 @@ info:
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 tags:
   - name: interviews
-    description: Questions api for exploring user needs in the first time user use the website. All questions will be stored in frontend side and will be sent the journey result (top 3) to backend side.
+    description: |
+      Questions api for exploring user needs in the first time user use the website. All questions will be stored in frontend side and will be sent the journey result (top 3) to backend side.
 paths:
   /journeys:
     post:
       tags:
         - interviews
       summary: Submit user's top 3 journeys
-      description: Submit user's top 3 journeys. (Need to get userId from token)
+      description: |
+        Submit user's top 3 journeys. (Need to get userId from token)
+        ```
+          INSERT INTO user_journey (userId, journeyId)
+          VALUES (6330203521, 'j1');
+          INSERT INTO user_journey (userId, journeyId)
+          VALUES (6330203521, 'j2');
+          INSERT INTO user_journey (userId, journeyId)
+          VALUES (6330203521, 'j3');
+        ```
       security:
         - bearerAuth: []
       requestBody:
