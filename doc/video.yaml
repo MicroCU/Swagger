@@ -20,7 +20,18 @@ paths:
       tags:
         - video
       summary: Get video for specific microlearning node
-      description: Get video for specific microlearning node
+      description: |
+        Get video for specific microlearning node
+        ```
+        1. Get videoId
+        SELECT videoId FROM micro WHERE id = 'm1' AND type = 'video';  [m1 is an example of micro id from path parameter]
+
+        2. Get video info
+        SELECT * FROM video WHERE id = 'v1';  [v1 is an example of video id from step 1]
+
+        2. Get documents info
+        SELECT * FROM document WHERE videoId = 'v1';  [v1 is an example of video id from step 1] 
+        ```
       security:
         - bearerAuth: []
       parameters:
@@ -66,6 +77,32 @@ paths:
         Get next video for specific microlearning node when current video is end. 
         The next video is the video that have the "same level" as the current video. 
         If the current video is the last video in the level, the next video will be the first video in the next level.
+        ```
+        1. Get groupId of current micro
+        SELECT groupId FROM micro WHERE id = 'm1';  [m1 is an example of micro id from path parameter]
+
+        2. COUNT number of micro in the group
+        SELECT COUNT(*) FROM micro WHERE groupId = 'g1';  [g1 is an example of group id from step 1]
+
+        3. Get sequence of current micro (sequence column which represents the order of micro in the group)
+        SELECT sequence FROM micro WHERE id = 'm1';  [m1 is an example of micro id from path parameter]
+
+        if sequence = COUNT, it means that current micro is the last micro in the group.
+          4-1. Get next group
+          SELECT nextId FROM group_next WHERE id = 'g1';  [g1 is an example of group id from step 1]
+
+          4-2 .Get videoId of micro in the next group which has sequence = 1
+          SELECT videoId FROM micro WHERE groupId = 'g2' AND sequence = 1;  [g2 is an example of group id from step 4-1]
+
+          4-3. Get video info
+          SELECT * FROM video WHERE id = 'v1';  [v1 is an example of video id from step 4-2]
+        else
+          4-1. Get videoId of micro in the same group which has sequence = current_sequence + 1  
+          SELECT videoId FROM micro WHERE groupId = 'g1' AND sequence = current_sequence + 1;  [g1 is an example of group id from step 1]
+
+          4-2. Get video info
+          SELECT * FROM video WHERE id = 'v1';  [v1 is an example of video id from step 4-1]
+        ```
       security:
         - bearerAuth: []
       parameters:
@@ -114,7 +151,18 @@ paths:
       tags:
         - video
       summary: Get all videos in path
-      description: Get all videos in path
+      description: |
+        Get all videos in path
+        ```
+        1. Get all groupIds in path
+        SELECT id from group WHERE pathId = 'p1';  [p1 is an example of path id from path parameter]
+
+        2. Get all micros in each group and get videoId of each micro
+        SELECT videoId FROM micro WHERE groupId = 'g1' AND type = 'video';  [g1 is an example of group id from step 1]
+
+        3. Get video info of each videoId
+        SELECT * FROM video WHERE id = 'v1';  [v1 is an example of video id from step 2]
+        ```
       security:
         - bearerAuth: []
       parameters:

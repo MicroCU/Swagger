@@ -20,7 +20,21 @@ paths:
       tags:
         - micro-graph
       summary: Get graph
-      description: Get directed graph (Each node is microlearning content) for specific path (Need to get userId from token)
+      description: |
+        Get directed graph (Each node is microlearning content) for specific path (Need to get userId from token)
+        ```
+        1. Get all groups info from the path
+        SELECT * FROM group WHERE pathId = 'p1';
+
+        2. Get all micros info in each group
+        SELECT * FROM micro WHERE groupId = 'g1';  [g1 is an example of group id from step 1]
+
+        3. Get next groups of each group
+        SELECT nextId FROM group_next WHERE id = 'g1';  [g1 is an example of group id from step 1]
+
+        4. Get progress of each micro
+        SELECT progress FROM user_micro WHERE userId = 6330203521 AND microId = 'n1';  [6330203521 is an example of userId from token, n1 is an example of micro id from step 2]
+        ```
       security:
         - bearerAuth: []
       parameters:
@@ -97,7 +111,14 @@ paths:
       tags:
         - micro-graph
       summary: Update micro progress
-      description: Update micro progress (Need to get userId from token)
+      description: |
+        Update micro progress (Need to get userId from token)
+        ```
+        UPDATE user_micro SET progress = your_value WHERE userId = 6330203521 AND microId = 'n1';  [6330203521 is an example of userId from token, n1 is an example of micro id from path /paths/:id]
+
+        If there is no record in user_micro, insert new record
+        INSERT INTO user_micro (userId, microId, progress) VALUES (6330203521, 'n1', your_value);
+        ```
       security:
         - bearerAuth: []
       parameters:
