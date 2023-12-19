@@ -34,7 +34,7 @@ paths:
 
         4. Get progress of each micro
         SELECT progress FROM user_micro WHERE userId = 6330203521 AND microId = 'n1';  [6330203521 is an example of userId from token, n1 is an example of micro id from step 2]
-        ```
+        ``` 
       security:
         - bearerAuth: []
       parameters:
@@ -112,13 +112,16 @@ paths:
         - micro-graph
       summary: Update micro progress
       description: |
-        Update micro progress (Need to get userId from token)
+        - Update micro progress (Need to get userId from token)
         ```
         UPDATE user_micro SET progress = your_value WHERE userId = 6330203521 AND microId = 'n1';  [6330203521 is an example of userId from token, n1 is an example of micro id from path /paths/:id]
 
         If there is no record in user_micro, insert new record
         INSERT INTO user_micro (userId, microId, progress) VALUES (6330203521, 'n1', your_value);
         ```
+
+        - Need to update path status from 'Not visited' to 'Still learning'
+        - If the micro's type is test and the progress is 100, need to update path status from 'Still learning' to 'Passed Test'
       security:
         - bearerAuth: []
       parameters:
@@ -136,11 +139,16 @@ paths:
             schema:
               type: "object"
               properties:
+                pathId:
+                  type: string
+                  description: id of path
+                  example: "p1"
                 progress:
                   type: integer
                   minimum: 0
                   maximum: 100
               example:
+                pathId: "p1"
                 progress: 50
       responses:
         200:
