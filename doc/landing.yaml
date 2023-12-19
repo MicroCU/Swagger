@@ -129,12 +129,35 @@ paths:
         - landing
       summary: Update updatedAt colmun in user_path table 
       description: | 
-        Update updatedAt colmun in user_path table (Need to get userId from token). This path is used when user click on the path.
+        - Update updatedAt colmun in user_path table (Need to get userId from token). This path is used when user click on the path.
         ```
         UPDATE user_path SET updatedAt = CURRENT_TIMESTAMP WHERE userId = 6330203521 AND pathId = 'p1';
 
         If the path is not in the user_path table, it will insert the path into the table.
         INSERT INTO user_path (userId, pathId, status) VALUES (6330203521, 'p1', 'Still learning');
+        ```
+
+        - There is some cases that the path may not be added to Journey page yet. (This is because the user may learn the path from search result)
+        For example: 
+        ```
+          jourey1: path1, path2, path3
+        ```
+        ```
+          jourey2: path1, path2, path6
+        ```
+        ```
+          jourey3: path2, path8, path9
+        ```
+
+        - path2, path3 and all three journeys is not be added to Journey page.
+        - When user learn path2 from serach result, path2 will be added to user_path table. If user also learn path3 from search result too, path3 will be added to user_path table.
+        - journey1 will be added to user_journey table when path2 and path3's status is "Passed Test". So, user can see journey1 in Journey page.
+        - CONCLUSION: If user learn path from search result, the path will be added to user_path table. If the path is in the journey, the journey will be added to user_journey table when more than or equal half of paths in the journey have status "Passed Test".
+        ```
+        1. Retrieve all journeys where more than or equal to half of the paths in the journey have the status 'Passed Test'.
+
+        2. Insert journeyId into user_journey table
+        INSERT INTO user_journey (userId, journeyId) VALUES (6330203521, 'j1'); ['j1' is example of journeyId from step 1]
         ```
       security:
         - bearerAuth: []
