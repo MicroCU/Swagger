@@ -84,7 +84,7 @@ paths:
         2. COUNT number of micro in the group
         SELECT COUNT(*) FROM micro WHERE groupId = 'g1';  [g1 is an example of group id from step 1]
 
-        3. Get sequence of current micro (sequence column which represents the order of micro in the group)
+        3. Get sequence of current micro (sequence is a column in micro table. Sequence represents the order of micro in the group and always start from 1 and increase by 1)
         SELECT sequence FROM micro WHERE id = 'm1';  [m1 is an example of micro id from path parameter]
 
         if sequence = COUNT, it means that current micro is the last micro in the group.
