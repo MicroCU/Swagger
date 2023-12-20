@@ -320,54 +320,6 @@ paths:
             application/json:
               example:
                 message: Unauthorized. Please login.
-  /achievement:
-    get:
-      tags:
-          - landing
-      summary: Get achievement of each journey
-      description: |
-        API for getting achievement of all journeys that user is involved (Need to get userId from token)
-        ```
-        1. Get all journeys that user is involved
-        SELECT * FROM journey WHERE id IN (SELECT journeyId FROM user_journey WHERE userId = 6330203521);
-
-        2. Get all paths that in the journey
-        SELECT * FROM path WHERE id IN (SELECT pathId FROM journey_path WHERE journeyId = 'j1'); ('j1' is example of journeyId from step 1)
-
-        3. Get path's status in user_path table
-        - passed = SELECT COUNT(*) FROM user_path WHERE userId = 6330203521 AND pathId = 'p1' AND status = 'Passed Test'; ('p1' is example of pathId from step 2)
-        - total = SELECT COUNT(*) FROM user_path WHERE userId = 6330203521 AND pathId = 'p1'; ('p1' is example of pathId from step 2)
-        - remainingPaths = SELECT * FROM path WHERE id IN (SELECT pathId FROM journey_path WHERE journeyId = 'j1') AND id NOT IN (SELECT pathId FROM user_path WHERE userId = 6330203521 AND status = 'Passed Test'); ('j1' is example of journeyId from step 1)
-        ```
-      security:
-        - bearerAuth: []
-      responses:
-        200:
-          description: Get achievement of each journey successfully.
-          content:
-            application/json:
-              schema:
-                type: "object"
-                properties:
-                  total:
-                    type: "integer"
-                    example: 1
-                  journeys:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/JourneyAchievement'
-        400:
-          description: Bad request
-          content:
-            application/json:
-              example:
-                message: Bad request. Please check the request payload.
-        401:
-          description: Unauthorized. Please login.
-          content:
-            application/json:
-              example:
-                message: Unauthorized. Please login.
 security:
   - bearerAuth: []
 components:

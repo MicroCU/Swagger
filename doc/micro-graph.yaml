@@ -34,6 +34,12 @@ paths:
 
         4. Get progress of each micro
         SELECT progress FROM user_micro WHERE userId = 6330203521 AND microId = 'n1';  [6330203521 is an example of userId from token, n1 is an example of micro id from step 2]
+
+        5. If micro's type is video, get video info
+        SELECT * FROM video WHERE id = 'v1';  [v1 is an example of video id from step 2 and id of video is the same as id of micro]
+
+        6. Get documents info
+        SELECT * FROM document WHERE microId = 'n1';  [n1 is an example of micro id from step 2]
         ``` 
       security:
         - bearerAuth: []
@@ -68,10 +74,26 @@ paths:
                           name: "Node 1"
                           progress: 0
                           type: "video"
+                          video:
+                            title: "How to make a cup of coffee"
+                            link: "https://www.youtube.com/watch?v=1q6zleFf6pE"
+                            decisionTitle: "It's okay, go ahead."
+                          documents:
+                            - name: "manual.pdf"
+                              link: "https://mycourseville-default.s3.ap-southeast-1.amazonaws.com/useruploaded_course_files/2023_1/39312/materials/W01_WebDevFundamentals-957520-16913396401537.pdf"
+                            - name: "manual2.pdf"
+                              link: "https://mycourseville-default.s3.ap-southeast-1.amazonaws.com/useruploaded_course_files/2023_1/39312/materials/W01_WebDevFundamentals-957520-16913396401537.pdf"
                         - id: "n2"
                           name: "Node 2"
                           progress: 50
                           type: "video"
+                          video:
+                            title: "How to make a cup of tea"
+                            link: "https://www.youtube.com/watch?v=1q6zleFf6pE"
+                            decisionTitle: "Give me advance example"
+                          documents:
+                            - name: "manual.pdf"
+                              link: "https://mycourseville-default.s3.ap-southeast-1.amazonaws.com/useruploaded_course_files/2023_1/39312/materials/W01_WebDevFundamentals-957520-16913396401537.pdf"
                     - id: "g2"
                       name: "Group 2"
                       nexts: ["g3"]
@@ -85,6 +107,13 @@ paths:
                           name: "Node 4"
                           progress: 20
                           type: "video"
+                          video:
+                            title: "How to be a good person"
+                            link: "https://www.youtube.com/watch?v=1q6zleFf6pE"
+                            decisionTitle: "Give me advance example"
+                          documents:
+                            - name: "doc.pdf"
+                              link: "https://mycourseville-default.s3.ap-southeast-1.amazonaws.com/useruploaded_course_files/2023_1/39312/materials/W01_WebDevFundamentals-957520-16913396401537.pdf"
                     - id: "g3"
                       name: "Node 5"
                       nexts: []
@@ -221,6 +250,12 @@ components:
             - 'video'
             - 'test'
             - 'practice'
+        video:
+          $ref: '#/components/schemas/Video'
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
     Group: 
       type: object
       properties:
@@ -248,3 +283,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Micro'
+    Video:
+      type: object
+      properties:
+        title:
+          type: "string"
+          example: "How to make a cup of coffee"
+          description: title of video
+        link:
+          type: "string"
+          example: "https://www.youtube.com/watch?v=1q6zleFf6pE" 
+          description: resource of video
+        decisionTitle:
+          type: "string"
+          example: "It's okay, go ahead."
+          description: option's title of video. It will be displayed when user need to choose which video to play next.
+    Document:
+      type: object
+      properties:
+        name:
+          type: "string"
+          example: "manual.pdf"
+          description: name of document
+        link:
+          type: "string"
+          example: "https://mycourseville-default.s3.ap-southeast-1.amazonaws.com/useruploaded_course_files/2023_1/39312/materials/W01_WebDevFundamentals-957520-16913396401537.pdf"
+          description: link of document
