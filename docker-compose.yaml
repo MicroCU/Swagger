@@ -13,5 +13,4 @@ services:
       URLS: "[{ url: 'doc/interview.yaml', name: 'Interview Page' },
           { url: 'doc/landing.yaml', name: 'Landing Page' },
           { url: 'doc/micro-graph.yaml', name: 'Microlearning Page' },
-          { url: 'doc/video.yaml', name: 'Video Content Page' },
          ]"
