@@ -10,7 +10,7 @@ info:
     email: tikhamporntan@gmail.com
   license:
     name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 tags:
   - name: landing
     description: This api is for landing page. This page contains journeys, recently visited and search bar. It has two modes (undirected graph which shows associated paths and normal mode).
@@ -20,7 +20,7 @@ paths:
       tags:
         - landing
       summary: Get journeys
-      description: | 
+      description: |
         API for getting journeys for user (Need to get userId from token)
         ```
         1. Get all journeys that user is involved
@@ -50,16 +50,17 @@ paths:
                   journeys:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Journey'
+                      $ref: "#/components/schemas/Journey"
                   relationships:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Relationship'
+                      $ref: "#/components/schemas/Relationship"
                 example:
                   total: 2
                   journeys:
                     - id: "j1"
                       name: "English For Business"
+                      progress: 50
                       paths:
                         total: 2
                         data:
@@ -67,7 +68,7 @@ paths:
                             name: "Grammar"
                             description: "Sentence Structure, Syntax and Punctuation"
                             picture: "https://www.flaticon.com/svg/static/icons/svg/2922/1112223.svg"
-                            tags: 
+                            tags:
                               - id: "c1"
                                 name: "Daily Conversation"
                                 icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922510.svg"
@@ -79,7 +80,7 @@ paths:
                             name: "Vocabulary"
                             description: "Word and Phrases"
                             picture: "https://www.flaticon.com/svg/static/icons/svg/2922/2922511.svg"
-                            tags: 
+                            tags:
                               - id: "c1"
                                 name: "Daily Conversation"
                                 icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922512.svg"
@@ -89,6 +90,7 @@ paths:
                             status: "Passed Test"
                     - id: "j2"
                       name: "Communication Tips"
+                      progress: 40
                       paths:
                         total: 1
                         data:
@@ -96,7 +98,7 @@ paths:
                             name: "Understanding Partner"
                             description: "How to understand your partner"
                             picture: "https://www.flaticon.com/svg/static/icons/svg/2922/2922513.svg"
-                            tags: 
+                            tags:
                               - id: "c1"
                                 name: "Daily Conversation"
                                 icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922514.svg"
@@ -106,10 +108,10 @@ paths:
                             status: "Still learning"
                   relationships:
                     - id: "p1"
-                      neighbor: ['p2']
+                      neighbor: ["p2"]
                     - id: "p2"
-                      neighbor: ['p1']
-                    - id: "p5" 
+                      neighbor: ["p1"]
+                    - id: "p5"
                       neighbor: []
         400:
           description: Bad request
@@ -127,8 +129,8 @@ paths:
     patch:
       tags:
         - landing
-      summary: Update updatedAt colmun in user_path table 
-      description: | 
+      summary: Update updatedAt colmun in user_path table (For displaying recently visited paths)
+      description: |
         - Update updatedAt colmun in user_path table (Need to get userId from token). This path is used when user click on the path.
         ```
         UPDATE user_path SET updatedAt = CURRENT_TIMESTAMP WHERE userId = 6330203521 AND pathId = 'p1';
@@ -168,7 +170,7 @@ paths:
   /paths/recently:
     get:
       tags:
-          - landing
+        - landing
       summary: Get recently visited paths
       description: |
         API for getting recently visited paths for user (Need to get userId from token) Recently is defined as the updatedAt column in user_path table.
@@ -197,11 +199,11 @@ paths:
                   paths:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Path'
+                      $ref: "#/components/schemas/Path"
                   relationships:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Relationship'
+                      $ref: "#/components/schemas/Relationship"
                 example:
                   total: 1
                   paths:
@@ -209,7 +211,7 @@ paths:
                       name: "Grammar"
                       description: "Sentence Structure, Syntax and Punctuation"
                       picture: "https://www.flaticon.com/svg/static/icons/svg/2922/1112223.svg"
-                      tags: 
+                      tags:
                         - id: "c1"
                           name: "Daily Conversation"
                           icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922510.svg"
@@ -237,7 +239,7 @@ paths:
       tags:
         - landing
       summary: Search specific path
-      description: | 
+      description: |
         API for searching specific path.
         ```
         1. Get all paths that match the search query
@@ -278,11 +280,11 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Path'
+                      $ref: "#/components/schemas/Path"
                   relationships:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Relationship'
+                      $ref: "#/components/schemas/Relationship"
                 example:
                   total: 1
                   data:
@@ -290,7 +292,7 @@ paths:
                       name: "Grammar"
                       description: "Sentence Structure, Syntax and Punctuation"
                       picture: "https://www.flaticon.com/svg/static/icons/svg/2922/1112223.svg"
-                      tags: 
+                      tags:
                         - id: "c1"
                           name: "Daily Conversation"
                           icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922510.svg"
@@ -299,14 +301,14 @@ paths:
                           icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922511.svg"
                       status: "Still learning"
                   relationships:
-                    - id: "p1"  # depth 0 (search result)
-                      neighbor: ['p2']
-                    - id: "p2"  # depth 1 
-                      neighbor: ['p1', 'p3']
-                    - id: "p3" # depth 2 
-                      neighbor: ['p2', 'p4']
+                    - id: "p1" # depth 0 (search result)
+                      neighbor: ["p2"]
+                    - id: "p2" # depth 1
+                      neighbor: ["p1", "p3"]
+                    - id: "p3" # depth 2
+                      neighbor: ["p2", "p4"]
                     - id: "p4" # depth 3
-                      neighbor: ['p3'] # only show path which is in the relationships
+                      neighbor: ["p3"] # only show path which is in the relationships
                     # p1 <--> p2 <--> p3 <--> p4
         400:
           description: Bad request
@@ -337,9 +339,12 @@ components:
         name:
           type: string
           example: "English For Business"
+        progress:
+          type: integer
+          example: 50
+          description: progress of the journey (calculated from the number of paths that user has passed and show in percent)
         paths:
-          type: 
-            object
+          type: object
           properties:
             total:
               type: integer
@@ -347,38 +352,7 @@ components:
             data:
               type: array
               items:
-                $ref: '#/components/schemas/Path'
-    JourneyAchievement:
-      type: object
-      properties:
-        id:
-          type: string
-          example: "j1"
-        name:
-          type: string
-          example: "English For Business"
-        passed:
-          description: amount of paths that user has passed the test
-          type: integer
-          example: 3
-        total:
-          description: total amount of paths in the journey
-          type: integer
-          example: 5
-        remainingPaths:
-          description: array of remaining paths' id (Path which has status "Still learning" or "Not visited")
-          type: array
-          items:
-            properties:
-              id:
-                type: string
-              name:
-                type: string
-          example: 
-            - id: "p1"
-              name: "Grammar"
-            - id: "p2"
-              name: "Vocabulary"
+                $ref: "#/components/schemas/Path"
     Path:
       type: object
       properties:
@@ -398,7 +372,7 @@ components:
         tags:
           type: array
           items:
-            $ref: '#/components/schemas/Tag'
+            $ref: "#/components/schemas/Tag"
         status:
           type: string
           description: status of the path (Still learning, Passed Test, Not visited)
@@ -430,4 +404,4 @@ components:
           description: array of associated path's id (Show only path's id which exists in the relationships)
           items:
             type: string
-          example: ['p2', 'p3', 'p4']
+          example: ["p2", "p3", "p4"]
