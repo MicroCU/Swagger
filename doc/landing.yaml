@@ -196,7 +196,7 @@ paths:
                 properties:
                   total:
                     type: "integer"
-                  paths:
+                  data:
                     type: array
                     items:
                       $ref: "#/components/schemas/Path"
@@ -206,7 +206,7 @@ paths:
                       $ref: "#/components/schemas/Relationship"
                 example:
                   total: 1
-                  paths:
+                  data:
                     - id: "p1"
                       name: "Grammar"
                       description: "Sentence Structure, Syntax and Punctuation"

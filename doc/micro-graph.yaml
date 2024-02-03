@@ -10,7 +10,7 @@ info:
     email: tikhamporntan@gmail.com
   license:
     name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 tags:
   - name: micro-graph
     description: API for getting graph (Each node is microlearning content) for specific path
@@ -23,7 +23,7 @@ paths:
       description: |
         Get directed graph (Each node is microlearning content) for specific path (Need to get userId from token)
         ```
-        1. Get all groups info from the path
+        1. Get all groups info and path detail from the path
         SELECT * FROM group WHERE pathId = 'p1';
 
         2. Get all micros info in each group
@@ -40,7 +40,7 @@ paths:
 
         6. Get documents info
         SELECT * FROM document WHERE microId = 'n1';  [n1 is an example of micro id from step 2]
-        ``` 
+        ```
       security:
         - bearerAuth: []
       parameters:
@@ -61,68 +61,79 @@ paths:
                   groups:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Group'
+                      $ref: "#/components/schemas/Path"
                     description: list of group in the path
                 example:
-                  groups:
-                    - id: "g1"
-                      name: "Group 1"
-                      nexts: ["g2"]
-                      type: "ordered"
-                      micros:
-                        - id: "n1"
-                          name: "Node 1"
-                          progress: 0
-                          type: "video"
-                          video:
-                            title: "How to make a cup of coffee"
-                            link: "https://www.youtube.com/watch?v=1q6zleFf6pE"
-                            decisionTitle: "It's okay, go ahead."
-                          documents:
-                            - name: "manual.pdf"
-                              link: "https://mycourseville-default.s3.ap-southeast-1.amazonaws.com/useruploaded_course_files/2023_1/39312/materials/W01_WebDevFundamentals-957520-16913396401537.pdf"
-                            - name: "manual2.pdf"
-                              link: "https://mycourseville-default.s3.ap-southeast-1.amazonaws.com/useruploaded_course_files/2023_1/39312/materials/W01_WebDevFundamentals-957520-16913396401537.pdf"
-                        - id: "n2"
-                          name: "Node 2"
-                          progress: 50
-                          type: "video"
-                          video:
-                            title: "How to make a cup of tea"
-                            link: "https://www.youtube.com/watch?v=1q6zleFf6pE"
-                            decisionTitle: "Give me advance example"
-                          documents:
-                            - name: "manual.pdf"
-                              link: "https://mycourseville-default.s3.ap-southeast-1.amazonaws.com/useruploaded_course_files/2023_1/39312/materials/W01_WebDevFundamentals-957520-16913396401537.pdf"
-                    - id: "g2"
-                      name: "Group 2"
-                      nexts: ["g3"]
-                      type: "unordered"
-                      micros:
-                        - id: "n3"
-                          name: "Node 3"
-                          progress: 100
-                          type: "practice"
-                        - id: "n4"
-                          name: "Node 4"
-                          progress: 20
-                          type: "video"
-                          video:
-                            title: "How to be a good person"
-                            link: "https://www.youtube.com/watch?v=1q6zleFf6pE"
-                            decisionTitle: "Give me advance example"
-                          documents:
-                            - name: "doc.pdf"
-                              link: "https://mycourseville-default.s3.ap-southeast-1.amazonaws.com/useruploaded_course_files/2023_1/39312/materials/W01_WebDevFundamentals-957520-16913396401537.pdf"
-                    - id: "g3"
-                      name: "Node 5"
-                      nexts: []
-                      type: "ordered"
-                      micros:
-                        - id: "g3"
-                          name: "Node 5"
-                          progress: 100
-                          type: "test"
+                  path:
+                    id: "p1"
+                    name: "Grammar"
+                    description: "Sentence Structure, Syntax and Punctuation"
+                    tags:
+                      - id: "c1"
+                        name: "Daily Conversation"
+                        icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922510.svg"
+                      - id: "c2"
+                        name: "Business"
+                        icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922510.svg"
+                    groups:
+                      - id: "g1"
+                        name: "Group 1"
+                        nexts: ["g2"]
+                        type: "ordered"
+                        micros:
+                          - id: "n1"
+                            name: "Node 1"
+                            progress: 0
+                            type: "video"
+                            video:
+                              title: "How to make a cup of coffee"
+                              link: "https://www.youtube.com/watch?v=1q6zleFf6pE"
+                              decisionTitle: "It's okay, go ahead."
+                            documents:
+                              - name: "manual.pdf"
+                                link: "https://mycourseville-default.s3.ap-southeast-1.amazonaws.com/useruploaded_course_files/2023_1/39312/materials/W01_WebDevFundamentals-957520-16913396401537.pdf"
+                              - name: "manual2.pdf"
+                                link: "https://mycourseville-default.s3.ap-southeast-1.amazonaws.com/useruploaded_course_files/2023_1/39312/materials/W01_WebDevFundamentals-957520-16913396401537.pdf"
+                          - id: "n2"
+                            name: "Node 2"
+                            progress: 50
+                            type: "video"
+                            video:
+                              title: "How to make a cup of tea"
+                              link: "https://www.youtube.com/watch?v=1q6zleFf6pE"
+                              decisionTitle: "Give me advance example"
+                            documents:
+                              - name: "manual.pdf"
+                                link: "https://mycourseville-default.s3.ap-southeast-1.amazonaws.com/useruploaded_course_files/2023_1/39312/materials/W01_WebDevFundamentals-957520-16913396401537.pdf"
+                      - id: "g2"
+                        name: "Group 2"
+                        nexts: ["g3"]
+                        type: "unordered"
+                        micros:
+                          - id: "n3"
+                            name: "Node 3"
+                            progress: 100
+                            type: "practice"
+                          - id: "n4"
+                            name: "Node 4"
+                            progress: 20
+                            type: "video"
+                            video:
+                              title: "How to be a good person"
+                              link: "https://www.youtube.com/watch?v=1q6zleFf6pE"
+                              decisionTitle: "Give me advance example"
+                            documents:
+                              - name: "doc.pdf"
+                                link: "https://mycourseville-default.s3.ap-southeast-1.amazonaws.com/useruploaded_course_files/2023_1/39312/materials/W01_WebDevFundamentals-957520-16913396401537.pdf"
+                      - id: "g3"
+                        name: "Node 5"
+                        nexts: []
+                        type: "ordered"
+                        micros:
+                          - id: "g3"
+                            name: "Node 5"
+                            progress: 100
+                            type: "test"
         400:
           description: Bad request. Please check the request payload.
           content:
@@ -230,6 +241,38 @@ components:
       type: http
       scheme: bearer
   schemas:
+    Path:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "p1"
+        name:
+          type: string
+          example: "Grammar"
+        description:
+          type: string
+          example: "Sentence Structure, Syntax and Punctuation"
+        tags:
+          type: array
+          items:
+            $ref: "#/components/schemas/Tag"
+        groups:
+          type: array
+          items:
+            $ref: "#/components/schemas/Group"
+    Tag:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "c1"
+        name:
+          type: string
+          example: "Daily Conversation"
+        icon:
+          type: string
+          example: "https://www.flaticon.com/svg/static/icons/svg/2922/2922510.svg"
     Micro:
       type: object
       properties:
@@ -247,16 +290,16 @@ components:
         type:
           type: string
           enum:
-            - 'video'
-            - 'test'
-            - 'practice'
+            - "video"
+            - "test"
+            - "practice"
         video:
-          $ref: '#/components/schemas/Video'
+          $ref: "#/components/schemas/Video"
         documents:
           type: array
           items:
-            $ref: '#/components/schemas/Document'
-    Group: 
+            $ref: "#/components/schemas/Document"
+    Group:
       type: object
       properties:
         id:
@@ -270,19 +313,19 @@ components:
           items:
             type: string
           description: List of next micro id
-        type: 
+        type:
           type: string
           enum:
-            - 'ordered'
-            - 'unordered'
-          description: | 
+            - "ordered"
+            - "unordered"
+          description: |
             Type of group.
             - ordered: group with micros that must be completed in order (order is defined by index of the array)
             - unordered: group with micros that can be completed in any order
         micros:
           type: array
           items:
-            $ref: '#/components/schemas/Micro'
+            $ref: "#/components/schemas/Micro"
     Video:
       type: object
       properties:
@@ -292,7 +335,7 @@ components:
           description: title of video
         link:
           type: "string"
-          example: "https://www.youtube.com/watch?v=1q6zleFf6pE" 
+          example: "https://www.youtube.com/watch?v=1q6zleFf6pE"
           description: resource of video
         decisionTitle:
           type: "string"
