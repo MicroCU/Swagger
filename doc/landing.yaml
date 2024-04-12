@@ -75,7 +75,7 @@ paths:
                               - id: "c2"
                                 name: "Business"
                                 icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922511.svg"
-                            status: "Still learning"
+                            progress: 30
                           - id: "p2"
                             name: "Vocabulary"
                             description: "Word and Phrases"
@@ -87,7 +87,7 @@ paths:
                               - id: "c2"
                                 name: "Business"
                                 icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922513.svg"
-                            status: "Passed Test"
+                            progress: 50.5
                     - id: "j2"
                       name: "Communication Tips"
                       progress: 40
@@ -105,14 +105,14 @@ paths:
                               - id: "c2"
                                 name: "Business"
                                 icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922515.svg"
-                            status: "Still learning"
+                            progress: 77
                   relationships:
                     - id: "p1"
-                      neighbor: ["p2"]
+                      neighbors: ["p2"]
                     - id: "p2"
-                      neighbor: ["p1"]
+                      neighbors: ["p1"]
                     - id: "p5"
-                      neighbor: []
+                      neighbors: []
         400:
           description: Bad request
           content:
@@ -136,7 +136,7 @@ paths:
         UPDATE user_path SET updatedAt = CURRENT_TIMESTAMP WHERE userId = 6330203521 AND pathId = 'p1';
 
         If the path is not in the user_path table, it will insert the path into the table.
-        INSERT INTO user_path (userId, pathId, status) VALUES (6330203521, 'p1', 'Still learning');
+        INSERT INTO user_path (userId, pathId, progress) VALUES (6330203521, 'p1', 'Still learning');
         ```
       security:
         - bearerAuth: []
@@ -218,10 +218,10 @@ paths:
                         - id: "c2"
                           name: "Business"
                           icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922511.svg"
-                      status: "Still learning"
+                      progress: 88
                   relationships:
                     - id: "p1"
-                      neighbor: []
+                      neighbors: []
         400:
           description: Bad request
           content:
@@ -299,16 +299,16 @@ paths:
                         - id: "c2"
                           name: "Business"
                           icon: "https://www.flaticon.com/svg/static/icons/svg/2922/2922511.svg"
-                      status: "Still learning"
+                      progress: 10.5
                   relationships:
                     - id: "p1" # depth 0 (search result)
-                      neighbor: ["p2"]
+                      neighbors: ["p2"]
                     - id: "p2" # depth 1
-                      neighbor: ["p1", "p3"]
+                      neighbors: ["p1", "p3"]
                     - id: "p3" # depth 2
-                      neighbor: ["p2", "p4"]
+                      neighbors: ["p2", "p4"]
                     - id: "p4" # depth 3
-                      neighbor: ["p3"] # only show path which is in the relationships
+                      neighbors: ["p3"] # only show path which is in the relationships
                     # p1 <--> p2 <--> p3 <--> p4
         400:
           description: Bad request
@@ -373,13 +373,9 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Tag"
-        status:
-          type: string
-          description: status of the path (Still learning, Passed Test, Not visited)
-          enum:
-            - "Still learning"
-            - "Passed Test"
-            - "Not visited"
+        progress:
+          type: number
+          format: float
     Tag:
       type: object
       properties:
@@ -399,7 +395,7 @@ components:
         id:
           type: string
           example: "p1"
-        neighbor:
+        neighbors:
           type: array
           description: array of associated path's id (Show only path's id which exists in the relationships)
           items:
