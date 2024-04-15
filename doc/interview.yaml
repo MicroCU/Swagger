@@ -33,22 +33,36 @@ paths:
         ```
       security:
         - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                journeyId:
-                  type: array
-                  description: array of top 3 journeys' id
-                  items:
-                    type: string
-                    description: id of journey
-                  example: ["j1", "j2", "j3"]
-              required:
-                - data
+      parameters:
+        - name: jid1
+          in: query
+          required: true
+          schema: 
+            type: string
+        - name: jid2
+          in: query
+          schema: 
+            type: string
+        - name: jid3
+          in: query
+          schema: 
+            type: string
+      # requestBody:
+      #   required: true
+      #   content:
+      #     application/json:
+      #       schema:
+      #         type: object
+      #         properties:
+      #           journeyId:
+      #             type: array
+      #             description: array of top 3 journeys' id
+      #             items:
+      #               type: string
+      #               description: id of journey
+      #             example: ["j1", "j2", "j3"]
+      #         required:
+      #           - data
       responses:
         201:
           description: User's journeys submitted successfully.
